@@ -191,6 +191,12 @@ const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | To
             onTouchEnd={stopDrawing}
           />
         </div>
+        <p className="justify-center flex align-middle mb-3 -mt-1">
+          If finished, upload on this ‪
+          <a className = " text-blue-500 underline"href = "https://drive.google.com/drive/folders/1smo-rVWtxKTmoS_SanUgT4P8S7OEmgSF?usp=sharing">
+             Drive 
+          </a>
+        </p>
         <div className="flex gap-4 justify-center">
             <button 
               onClick={clearCanvas}
