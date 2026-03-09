@@ -9,7 +9,33 @@ export default function App(){
   const [isLoaded,setIsLoaded] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true);
+    const { x, y } = getCoordinates(e);
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return;
+    
+    ctx.lineWidth = 5; // stroke
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'black';
+    
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   useEffect(() => {
     clearCanvas();
@@ -37,52 +63,36 @@ export default function App(){
   }, [count, digitClass, writerName, isDone, isLoaded]);
 
 
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
   useEffect(()=>{
     clearCanvas();
   },[]);
 
-  const getCoordinates = (e) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return {x:0 , y:0};
-    const rect = canvas.getBoundingClientRect();
-        if (e.touches && e.touches.length > 0) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top
-      };
-    }
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    };
+const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
+  const canvas = canvasRef.current;
+  if (!canvas) return { x: 0, y: 0 };
+  
+  const rect = canvas.getBoundingClientRect();
+  
+  // Logic lấy tọa độ (ví dụ cho Mouse)
+  let clientX, clientY;
+  
+  if ('touches' in e) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else {
+    clientX = (e as React.MouseEvent).clientX;
+    clientY = (e as React.MouseEvent).clientY;
   }
 
-  const startDrawing = (e) => {
-    setIsDrawing(true);
-    const { x, y } = getCoordinates(e);
-    const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx) return;
-    
-    ctx.lineWidth = 5; // stroke
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = 'black';
-    
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y);
-    ctx.stroke();
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
   };
+};
+
+
   
-  const draw = (e) => {
+  const draw = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
     if (!isDrawing) return;
     e.preventDefault();
     const {x,y} = getCoordinates(e);
@@ -126,13 +136,12 @@ export default function App(){
   }
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-    
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space' && document.activeElement?.tagName !== 'INPUT') {
         e.preventDefault();
         handleSaveAndNext();
       }
-    };
+    }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [count, writerName]); 
@@ -164,7 +173,7 @@ export default function App(){
             onChange={(e) => setCount(Number(e.target.value))} 
             className="border border-gray-300 rounded px-2 py-1 w-16 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
-          <p1 className = "text-sm text-gray-600">/200</p1>
+          <p className = "text-sm text-gray-600">/200</p>
         </div>
         <p className = "font-semibold text-sm"> Number: {digitClass}</p>
         <div className="flex justify-center mb-6">
