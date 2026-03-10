@@ -37,15 +37,6 @@ export default function App(){
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  const resetAll = () => {
-    clearCanvas();
-
-    setDigitClass(0);
-    setCount(0);
-    setWriterName("Writer_name");
-    setIsDone(false);
-
-  }
 
   useEffect(() => {
     clearCanvas();
@@ -101,6 +92,18 @@ const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | To
 };
 
 
+  const resetAll = () => {
+    clearCanvas();
+
+    setDigitClass(0);
+    setCount(0);
+    setWriterName("Writer_name");
+    setIsDone(false);
+    localStorage.removeItem('dataCollect_count');
+    localStorage.removeItem('dataCollect_class');
+    localStorage.removeItem('dataCollect_writer');
+    localStorage.removeItem('dataCollect_isDone');
+  }
   
   const draw = (e: React.MouseEvent | React.TouchEvent | MouseEvent | TouchEvent) => {
     if (!isDrawing) return;
