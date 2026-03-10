@@ -37,6 +37,16 @@ export default function App(){
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
+  const resetAll = () => {
+    clearCanvas();
+
+    setDigitClass(0);
+    setCount(0);
+    setWriterName("Writer_name");
+    setIsDone(false);
+
+  }
+
   useEffect(() => {
     clearCanvas();
     
@@ -163,7 +173,7 @@ const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | To
             placeholder="Name" 
             value={writerName}
             onChange={(e) => setWriterName(e.target.value)}
-            className="border border-gray-300 rounded px-2 py-1 w-24 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
+            className=" text-black border border-gray-300 rounded px-2 py-1 w-24 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
           /> 
           <label className = "text-sm font-semibold text-gray-800"> Picture number: </label>
                     <input 
@@ -171,11 +181,11 @@ const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | To
             id="imageCounter" 
             value={count} 
             onChange={(e) => setCount(Number(e.target.value))} 
-            className="border border-gray-300 rounded px-2 py-1 w-16 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="text-black border border-gray-300 rounded px-2 py-1 w-16 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
           <p className = "text-sm text-gray-600">/200</p>
         </div>
-        <p className = "font-semibold text-sm"> Number: {digitClass}</p>
+        <p className = "font-semibold text-sm  text-black"> Number: {digitClass}</p>
         <div className="flex justify-center mb-6">
           <canvas 
             ref={canvasRef}
@@ -191,13 +201,19 @@ const getCoordinates = (e: React.MouseEvent | React.TouchEvent | MouseEvent | To
             onTouchEnd={stopDrawing}
           />
         </div>
-        <p className="justify-center flex align-middle mb-3 -mt-1">
+        <p className="justify-center flex align-middle mb-3 -mt-1 text-black">
           If finished, upload on this ‪
           <a className = " text-blue-500 underline"href = "https://drive.google.com/drive/folders/1smo-rVWtxKTmoS_SanUgT4P8S7OEmgSF?usp=sharing">
              Drive 
           </a>
         </p>
         <div className="flex gap-4 justify-center">
+            <button
+              onClick = {resetAll}
+              className = "px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-red-500 hover:text-white transition-colors"
+            >
+              Reset
+            </button>
             <button 
               onClick={clearCanvas}
               className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
